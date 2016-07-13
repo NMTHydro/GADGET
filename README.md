@@ -5,3 +5,5 @@ Distributed Reference ET in Complex Terrain
 
 Developed by Peter Revelle 2016
 New Mexico Tech
+
+[Documentation](http://gadget.readthedocs.io/en/latest/)

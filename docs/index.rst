@@ -6,7 +6,7 @@
 Welcome to GADGET's documentation!
 ==================================
 
-**G** ridded **A**tmospheric **D**ata Downscalin**G** and **E**vapotranspiration **T**ools for High-resolution
+**G**\ ridded **A**\ tmospheric **D**\ ata Downscalin\ **G** and **E**\ vapotranspiration **T**\ ools for High-resolution
 Distributed Reference ET in Complex Terrain
 
 
@@ -15,6 +15,7 @@ Contents:
 .. toctree::
    :maxdepth: 2
 
+   quickstart
 
 
 Indices and tables

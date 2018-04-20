@@ -2,19 +2,19 @@
 
 Gadget Note
 #0627 This day operates NM data
-1. Beforehand, we got LinkeTurbidity offline. <- Save_linke_turbidityNDimage
-2. Project LinkeTurbidity <- GdalProjLinkeLatLong
+1. Beforehand, we got LinkeTurbidity offline. <- `Save_linke_turbidityNDimage`
+2. Project LinkeTurbidity <- `GdalProjLinkeLatLong`
 3. Down size them to NM scale or Walnute Gulch <-Save_linke_turbidity_NDimageMETDATA
 4. Divide LinkeTurbidity by 20. (. for decimal floating)--> due to the algorithm, true value should around 2-3
 -------------------------Record starts-------------------------------------
-5. Script: Save_linke_turbidity_NDimageMETDATA
+5. Script: `Save_linke_turbidity_NDimageMETDATA`
 Function: time_interpolation
 Interpolate cropped LinkeTurbidity
 Directly run the entire script
 Directory: 4 rows Linke data cropped according to DEM domain -->result in linke_METDATA_by_day
 Crop_Walnut: 5 rows Linke data cropped according to MeteData domain
 Ref_map: take the geo attribute of the map --> in first round, get one from the “crop” directory
-6. Script: GdalConvLinkeCropLatLong250
+6. Script: `GdalConvLinkeCropLatLong250`
 Crop the original LatLong World map to 250 m smaller area
 
 

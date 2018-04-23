@@ -15,14 +15,14 @@
 # ===============================================================================
 import os
 import sys
-from math import isnan
+from numpy import isnan
 
 import gdal
 from numpy import linspace
 gdal.AllRegister()
 
 
-def read_map(path, file_format):
+def read_map(path, file_format='Gtiff'):
     """
     read geographical file into memory
 
@@ -93,6 +93,7 @@ def write_map(path, file_format, x, y, data, prj, fill, verbose=False):
     # driver2 = gdal.GetDriverByName(file_format)
 
     data[isnan(data)] = fill
+
     # Processing
     if verbose:
         print 'Writing to temporary file {}.tif'.format(path)

@@ -25,9 +25,9 @@ cfg = {
     'use_linke_turbidity': True,
     'startday': datetime(2000, 1, 1, 0),
     'endday': datetime(2000, 12, 31, 0),
-    'basemap': 'data/01_longlat_wgs84.tif',
-    'linke_turbidity_dir': 'data',
-    'linke_output_dir': 'output'
+    'basemap': 'data/crop_250m_walnut/01_longlat_wgs84.tif',
+    'linke_turbidity_dir': 'data/crop_250m_walnut',
+    'linke_output_dir': 'output_linke_write_NDimage'
 }
 
 
@@ -40,6 +40,8 @@ def load_configuration(path=None):
             yd = yaml.load(rfile)
 
             cfg.update(yd)
+
+    load_basemap()
 
 
 def load_basemap():

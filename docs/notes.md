@@ -72,7 +72,7 @@ Usage see NM_rsunGdalDOYexact.py Line 30
 2. NM_rsunGdalDOYexact.py:
 Search: H:\\GRASS\\ShadingArea\\SmallArea\\cell -->where the original files are
 Path: H:\\GRASS_scripts --> not actually been used. Scripts’ location
-Path2 : H:\\Walnut\\rsun_250m--> The output from last time, final destination
+Path2 : H:\\Walnut\\rsun_250m--> The output_linke_write_NDimage from last time, final destination
 Note: beam radiation only depends on the sun and the terrain
 3. Redo what we just did: recalculate those parameters with the resolution the same as meteologic data assuming flat surfaces.
 4. New mapset: Walnut_lowRes
@@ -106,12 +106,12 @@ Now, the coarse resolution linke data are in: H:\GADGET\LinkeTurbidity\linke_MET
 6. While the thing is running --> download METDATA from cida.usgs.com from 2000 to 2015
 Line 47 of the script (download_METDATA_2014_15.py) after the ? are all the data we download
 Remember to change the domain!!!!
-7. Now, the GRASS thing is done --> output those Rbflats  by using the script NM_rsunflat_GdalDOYexact.py into \Walnut\rsun_METDATA
+7. Now, the GRASS thing is done --> output_linke_write_NDimage those Rbflats  by using the script NM_rsunflat_GdalDOYexact.py into \Walnut\rsun_METDATA
 8. Corrections of slope and aspect settings --> already mentioned in 2. so no worries
 9. Convert outputs to correct unit by using GdalConvFlatRadWm2.py into folder: FlatRadWm2
-10. However, this time the output has issue -->probably influenced by the linke turbidity and aspect map.
+10. However, this time the output_linke_write_NDimage has issue -->probably influenced by the linke turbidity and aspect map.
 
-#8.01 Continue fixing the wrong output
+#8.01 Continue fixing the wrong output_linke_write_NDimage
 1. Use raster calculator to calculate DEM_sealevel_4km from our domain
 2. Script to operate this is in sealevel folder keep using the same DEM as last time
 3. No OK --> specify linke_value in grass run command to be 3.0 -->No-->several trials --> problem is on slope and aspect
@@ -131,12 +131,12 @@ The data could be viewed in GIS --> more like having bands storing different are
 6. To match the main GADGET functionality, create a new folder and resample the DEM:
 Take the first day DEM processed by ArcGIS
 Use the Script in GADGET folder: GdapConvDEMCropLatLong250.py
-Input folder: DEM output folder: dem_clip
+Input folder: DEM output_linke_write_NDimage folder: dem_clip
 Don’t forget to get your 366th day
 Finally flatdir = ‘FlatRad_DEMRes’
 7. Run it from terminal “The METDATA script”:
 Look the comment for syntax for run:
 Python gadget_METDATavap.py -I gadget_METDATAevap.ini -S 0 -E 
 In this comment the -S and -E are referring back to the ini date
-8. All output in folder: PM_RAD --> PM is the ref ET, rad --> radiation
+8. All output_linke_write_NDimage in folder: PM_RAD --> PM is the ref ET, rad --> radiation
 9. These outputs are still in latlong: new boundary would delete two grids for each of the side

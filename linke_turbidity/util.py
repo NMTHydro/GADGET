@@ -26,7 +26,7 @@ from config import cfg
 from map_utils import read_map, write_map
 
 
-def extract_dates(day):
+def extract_dates(day, verbose=False):
 
     this_month = day.month
     this_monthobj = datetime.datetime(day.year, this_month, day.day, 0)
@@ -51,17 +51,19 @@ def extract_dates(day):
 
         in_one_month = this_monthobj+relativedelta(months=1)
         in_one_month.replace(year=thisyear)
-
-    print('this month', this_month)
-    print('in one month', in_one_month)
+    if verbose:
+        print('this month', this_month)
+        print('in one month', in_one_month)
 
     fmt = '{:02d}'
     month = fmt.format(this_month)
     str_nextmonth = int(in_one_month.strftime('%m'))
     mid_thismonth = this_monthobj.replace(day=1) + datetime.timedelta(days=14)
-    print('middle of this month', mid_thismonth)
+
     mid_nextmonth = in_one_month + datetime.timedelta(days=14)
-    print('middle of next month', mid_nextmonth)
+    if verbose:
+        print('middle of this month', mid_thismonth)
+        print('middle of next month', mid_nextmonth)
     next_month = fmt.format(str_nextmonth)
     return month, next_month, mid_thismonth, mid_nextmonth
 
@@ -75,7 +77,7 @@ def get_paths(month, next_month):
     return cp, np
 
 
-def time_interpolation(day, lat, lon):
+def time_interpolation(day, verbose=False):
     month, next_month, mid_month, mid_next_month = extract_dates(day)
     current_path, next_path = get_paths(month, next_month)
 
@@ -101,11 +103,13 @@ def time_interpolation(day, lat, lon):
     days_dif = days_dif.days
     max_days_diff = mid_next_month - mid_month
     max_days_diff = max_days_diff.days
-    print('day', day)
-    print('days difference from mid next month', days_dif)
-    print('out of max days difference from mid this month', max_days_diff)
+
     interp = 1 - (days_dif / max_days_diff)  # 1 = weight completely next month linke values, 0 = previous month
-    print('interp ratio between monthly images', interp)
+    if verbose:
+        print('day', day)
+        print('days difference from mid next month', days_dif)
+        print('out of max days difference from mid this month', max_days_diff)
+        print('interp ratio between monthly images', interp)
 
     # 0.5 corresponds to half way between arr1 and arr2
     coordinates = ones((r, c)) * interp, x, y
@@ -117,18 +121,23 @@ def time_interpolation(day, lat, lon):
 
 
 def do_linke_turbidity():
+
+    print 'Doing linke turbidity'
+
     for day in rrule.rrule(rrule.DAILY,
                            dtstart=cfg.get('startday'),
                            until=cfg['endday']):
         bm = cfg['basemap_dict']
 
         lat, lon = bm['lat'], bm['lon']
-        linke_daily = time_interpolation(day, lat, lon)
+        linke_daily = time_interpolation(day)
 
         nr = day.strftime('%j')
         daily_doy = 'linkewgs84_{}.tif'.format(nr)
         outname = os.path.join(cfg['linke_output_dir'], daily_doy)
-        write_map(outname, 'Gtiff', lon, lat, linke_daily, cfg['linke_sr_wkt'], bm['fill'])
+        write_map(outname, 'Gtiff', lon, lat, linke_daily, cfg['linke_sr_wkt'], bm['fill'], verbose=False)
+
+    print 'Linke turbidity calculation finished.'
 
 
 def project_lat_long():

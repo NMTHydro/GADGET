@@ -211,7 +211,7 @@ def time_interpolation(day, Lat, Lon):
 
     # Peter's old paths
     # base_dir = 'G:\\GADGET\\LinkeTurbidity\\crop_Walnut'
-    # output = 'G:\\GADGET\\LinkeTurbidity\\linke_METDATA_by_day_Walnut'
+    # output_linke_write_NDimage = 'G:\\GADGET\\LinkeTurbidity\\linke_METDATA_by_day_Walnut'
 
     # New Paths
     base_dir = '/Volumes/SeagateBackupPlusDrive/Gadget_2014_2015/Linke_Turbidity/proj'
@@ -371,26 +371,26 @@ def subtract_one_month(dt0):
 
 #Write stacked Linke values to new Raster
 ##stacked = 'LinkeAgg.tif'
-##outname = os.path.join(output, stacked)
+##outname = os.path.join(output_linke_write_NDimage, stacked)
 ##print(agg.shape)
 ##print(agg)
 ##
 ##writeMap(outname,'Gtiff', Lon, Lat, agg, sr_wkt, FillVal)
 
 # base_dir='G:\\linketurbidity-master\\linketurbidity\\crop_METDATA'
-# output='G:\\linketurbidity-master\\linketurbidity\\linke_METDATA_by_day'
+# output_linke_write_NDimage='G:\\linketurbidity-master\\linketurbidity\\linke_METDATA_by_day'
 
 # TODO - if you are a new user change this for your own computer.
 # base_dir = 'G:\\GADGET\\LinkeTurbidity\\crop_Walnut'
 base_dir = '/Volumes/SeagateBackupPlusDrive/Gadget_2014_2015/Linke_Turbidity/proj'
-# output = 'G:\\GADGET\\LinkeTurbidity\\linke_METDATA_by_day_Walnut'
+# output_linke_write_NDimage = 'G:\\GADGET\\LinkeTurbidity\\linke_METDATA_by_day_Walnut'
 output = '/Volumes/SeagateBackupPlusDrive/Gadget_2014_2015/Linke_Turbidity/linke_metdata_by_day'
 
 # Don't change these?
 startday = datetime.datetime(2000,1,1,0)
 endday = datetime.datetime(2000,12,31,0)
 
-# the ref map is just an example map from the previous step output from GdalProjLinkeLatLong
+# the ref map is just an example map from the previous step output_linke_write_NDimage from GdalProjLinkeLatLong
 ref_map = 'April.tif' #
 resX, resY, cols, rows, Lon, Lat, Linke, prj, FillVal = readMap(os.path.join(base_dir,ref_map), 'Gtiff')
 

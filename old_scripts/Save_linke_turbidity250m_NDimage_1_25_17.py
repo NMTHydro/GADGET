@@ -357,7 +357,7 @@ def subtract_one_month(dt0):
 
 #Write stacked Linke values to new Raster
 ##stacked = 'LinkeAgg.tif'
-##outname = os.path.join(output, stacked)
+##outname = os.path.join(output_linke_write_NDimage, stacked)
 ##print(agg.shape)
 ##print(agg)
 ##

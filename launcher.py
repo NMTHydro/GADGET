@@ -43,7 +43,7 @@ def main():
 
     # step 1
 
-    if cfg.use_linke_turbidity:
+    if cfg['use_linke_turbidity']:
         from linke_turbidity.util import do_linke_turbidity
         do_linke_turbidity()
 

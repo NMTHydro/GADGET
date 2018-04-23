@@ -14,16 +14,24 @@
 # limitations under the License.
 # ===============================================================================
 import os
+from datetime import datetime
+
+import osr
 import yaml
 
-cfg = {
-    'use_linke_turbidity': True
+from map_utils import read_map
 
+cfg = {
+    'use_linke_turbidity': True,
+    'startday': datetime(2000, 1, 1, 0),
+    'endday': datetime(2000, 12, 31, 0),
+    'basemap': 'data/01_longlat_wgs84.tif',
+    'linke_turbidity_dir': 'data',
+    'linke_output_dir': 'output'
 }
 
 
 def load_configuration(path=None):
-
     if path is None:
         path = os.path.join(os.path.expanduser('~'), '.gadget.yml')
 
@@ -31,8 +39,15 @@ def load_configuration(path=None):
         with open(path, 'r') as rfile:
             yd = yaml.load(rfile)
 
-            global cfg
             cfg.update(yd)
 
 
+def load_basemap():
+    keys = ('resX', 'resY', 'cols', 'rows', 'lon', 'lat', 'linke', 'prj', 'fill')
+    vals = read_map(cfg['basemap'], 'Gtiff')
+    cfg['basemap_dict'] = bm = dict(zip(keys, vals))
+
+    srs = osr.SpatialReference(bm['prj'])
+    sr_wkt = srs.ExportToWkt()
+    cfg['linke_sr_wkt'] = sr_wkt
 # ============= EOF =============================================

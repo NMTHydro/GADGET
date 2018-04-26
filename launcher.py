@@ -47,6 +47,18 @@ def main():
         from linke_turbidity.util import do_linke_turbidity
         do_linke_turbidity()
 
+    if cfg['use_linke_projection']:
+        from linke_turbidity.util import project_lat_long
+        project_lat_long()
+
+    if cfg['use_linke_downsize']:
+        from linke_turbidity.util import do_downsize
+        do_downsize()
+
+    if cfg['use_linke_warp']:
+        from linke_turbidity.util import do_warp
+        do_warp()
+
     # step 2
 
 

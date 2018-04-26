@@ -15,6 +15,7 @@
 # ===============================================================================
 import datetime
 import os
+from subprocess import call
 
 from dateutil import rrule
 from dateutil.relativedelta import relativedelta
@@ -23,11 +24,10 @@ from numpy.ma import arange
 from scipy import ndimage
 
 from config import cfg
-from map_utils import read_map, write_map
+from map_utils import read_raster, write_raster, find_rasters
 
 
 def extract_dates(day, verbose=False):
-
     this_month = day.month
     this_monthobj = datetime.datetime(day.year, this_month, day.day, 0)
 
@@ -38,7 +38,7 @@ def extract_dates(day, verbose=False):
         if day.month == 1:
             thisyear -= 1
 
-        this_month = this_monthobj-relativedelta(months=1)
+        this_month = this_monthobj - relativedelta(months=1)
         this_month = this_month.month
         this_monthobj = datetime.datetime(thisyear, this_month, day.day, 0)
 
@@ -49,7 +49,7 @@ def extract_dates(day, verbose=False):
         if day.month == 12:
             thisyear += 1
 
-        in_one_month = this_monthobj+relativedelta(months=1)
+        in_one_month = this_monthobj + relativedelta(months=1)
         in_one_month.replace(year=thisyear)
     if verbose:
         print('this month', this_month)
@@ -81,8 +81,8 @@ def time_interpolation(day, verbose=False):
     month, next_month, mid_month, mid_next_month = extract_dates(day)
     current_path, next_path = get_paths(month, next_month)
 
-    current = read_map(current_path)
-    next_map = read_map(next_path)
+    current = read_raster(current_path)
+    next_map = read_raster(next_path)
 
     linke = current[6] / 20.
     nlinke = next_map[6] / 20.
@@ -121,7 +121,6 @@ def time_interpolation(day, verbose=False):
 
 
 def do_linke_turbidity():
-
     print 'Doing linke turbidity'
 
     for day in rrule.rrule(rrule.DAILY,
@@ -135,11 +134,52 @@ def do_linke_turbidity():
         nr = day.strftime('%j')
         daily_doy = 'linkewgs84_{}.tif'.format(nr)
         outname = os.path.join(cfg['linke_output_dir'], daily_doy)
-        write_map(outname, 'Gtiff', lon, lat, linke_daily, cfg['linke_sr_wkt'], bm['fill'], verbose=False)
+        write_raster(outname, 'Gtiff', lon, lat, linke_daily, cfg['linke_sr_wkt'], bm['fill'], verbose=False)
 
     print 'Linke turbidity calculation finished.'
 
 
 def project_lat_long():
+    root = cfg['linke_output_dir']
+    out_root = cfg['linke_output_proj_dir']
+
+    for raster in find_rasters(root):
+        out = os.path.join(out_root, raster)
+        raster = os.path.join(root, raster)
+        gcp = '-gcp 0.0 0.0 -180.0 90.0 -gcp 0.0 2160.0 -180.0 -90.0 -gcp 4320.0 0.0 180.0 90.0'
+        cmd = 'gdal_translate -of GTiff -a_srs EPSG:4326 {} -r "near" {} {}' % (gcp, raster, out)
+
+        call(cmd, shell=True)
+
+
+def do_warp():
+    root = cfg['linke_output_proj_dir']
+    out_root = cfg['linke_output_warp_dir']
+
+    ssrs = 'EPSG: 4326'
+    tsrs = 'EPSG: 4326'
+    te = '-110.2098918542965151 31.6254675894567470 -109.5432356466024828 31.8337976622254928'
+    tr = '0.041666 0.041666'
+    ts = '6 18'
+    r = 'cubic'
+    srcnodata = -3.40282346639e+038
+
+    warp_cmd = 'gdalwarp -overwrite -s_srs {} -t_srs {} -te {} -r "{}"'.format(ssrs, tsrs, te, r)
+    for raster in find_rasters(root):
+        temp = os.path.join(root, 'temp.tif')
+        in_raster = os.path.join(root, raster)
+        out_raster = os.path.join(out_root, raster)
+
+        cmd = '{} -ts {} -multi -srcnodata "{}" -dstnodata -999 {} {}'.format(warp_cmd, ts, srcnodata, in_raster, temp)
+        call(cmd)
+
+        cmd = '{} -tr {} -multi -srcnodata -999 -dstnodata -999 {} {}'.format(warp_cmd, tr, temp, out_raster)
+        call(cmd)
+
+    os.remove(temp)
+
+
+def do_downsize():
     pass
+
 # ============= EOF =============================================

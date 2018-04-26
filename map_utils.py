@@ -13,16 +13,18 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ===============================================================================
+import glob
 import os
 import sys
 from numpy import isnan
 
 import gdal
 from numpy import linspace
+
 gdal.AllRegister()
 
 
-def read_map(path, file_format='Gtiff'):
+def read_raster(path, file_format='Gtiff'):
     """
     read geographical file into memory
 
@@ -76,7 +78,11 @@ def add_extension(path, ext='.tif'):
     return path
 
 
-def write_map(path, file_format, x, y, data, prj, fill, verbose=False):
+def find_rasters(root, search='*.tif'):
+    return glob.glob(root, search)
+
+
+def write_raster(path, file_format, x, y, data, prj, fill, verbose=False):
     """
     Write geographical data into file. Also replave NaN bu FillVall
 

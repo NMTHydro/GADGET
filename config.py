@@ -19,7 +19,7 @@ from datetime import datetime
 import osr
 import yaml
 
-from map_utils import read_map
+from map_utils import read_raster
 
 cfg = {
     'use_linke_turbidity': True,
@@ -27,7 +27,11 @@ cfg = {
     'endday': datetime(2000, 12, 31, 0),
     'basemap': 'data/crop_250m_walnut/01_longlat_wgs84.tif',
     'linke_turbidity_dir': 'data/crop_250m_walnut',
-    'linke_output_dir': 'output_linke_write_NDimage'
+    'linke_output_dir': 'output_linke_write_NDimage',
+    'use_linke_project': True,
+    'linke_output_proj_dir': 'output_linke_proj',
+    'use_linke_warp': True,
+    'linke_output_warp_dir': 'output_linke_warp'
 }
 
 
@@ -46,7 +50,7 @@ def load_configuration(path=None):
 
 def load_basemap():
     keys = ('resX', 'resY', 'cols', 'rows', 'lon', 'lat', 'linke', 'prj', 'fill')
-    vals = read_map(cfg['basemap'], 'Gtiff')
+    vals = read_raster(cfg['basemap'], 'Gtiff')
     cfg['basemap_dict'] = bm = dict(zip(keys, vals))
 
     srs = osr.SpatialReference(bm['prj'])
